@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:RankUp.Models"
+             x:Class="RankUp.Views.FriendMatchesPage"
+             BackgroundColor="#0a0e1a"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto" Padding="16" RowSpacing="10">
+
+        <!-- ШАПКА -->
+        <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12" Margin="0,20,0,0">
+            <Border Grid.Column="0"
+                    Stroke="#f5df67" StrokeThickness="2.5"
+                    WidthRequest="70" HeightRequest="70">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="35"/>
+                </Border.StrokeShape>
+                <Image x:Name="FriendAvatar" Aspect="AspectFill"/>
+            </Border>
+
+            <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                <Label x:Name="FriendName"
+                       FontSize="22" FontAttributes="Bold"
+                       TextColor="#f5df67" LineBreakMode="TailTruncation"/>
+                <Label x:Name="FriendStats"
+                       FontSize="13" TextColor="#8899aa"/>
+            </VerticalStackLayout>
+
+            <Button Grid.Column="2" Text="✕"
+                    FontSize="18"
+                    BackgroundColor="#1a2030"
+                    TextColor="#f87171"
+                    WidthRequest="44" HeightRequest="44"
+                    CornerRadius="22" Padding="0"
+                    Clicked="OnCloseClicked"/>
+        </Grid>
+
+        <!-- СТАТИСТИКА -->
+        <Border Grid.Row="1" StrokeThickness="1" Stroke="#2a3748" Padding="16,12">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="14"/>
+            </Border.StrokeShape>
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#1a2030" Offset="0.0"/>
+                    <GradientStop Color="#0f1420" Offset="1.0"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            <Grid ColumnDefinitions="*,*,*">
+                <VerticalStackLayout Grid.Column="0" Spacing="2">
+                    <Label Text="ВМЕСТЕ" FontSize="10" TextColor="#8899aa" HorizontalTextAlignment="Center"/>
+                    <Label x:Name="GamesTogetherLabel" FontSize="24" FontAttributes="Bold"
+                           TextColor="#f5df67" HorizontalTextAlignment="Center"/>
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="1" Spacing="2">
+                    <Label Text="ПОБЕД" FontSize="10" TextColor="#8899aa" HorizontalTextAlignment="Center"/>
+                    <Label x:Name="WinsTogetherLabel" FontSize="24" FontAttributes="Bold"
+                           TextColor="#4ade80" HorizontalTextAlignment="Center"/>
+                </VerticalStackLayout>
+                <VerticalStackLayout Grid.Column="2" Spacing="2">
+                    <Label Text="WINRATE" FontSize="10" TextColor="#8899aa" HorizontalTextAlignment="Center"/>
+                    <Label x:Name="WinRateTogetherLabel" FontSize="24" FontAttributes="Bold"
+                           TextColor="#f5df67" HorizontalTextAlignment="Center"/>
+                </VerticalStackLayout>
+            </Grid>
+        </Border>
+
+        <!-- МАТЧИ -->
+        <CollectionView x:Name="MatchesList" Grid.Row="2" SelectionMode="None">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:FriendMatchView">
+                    <Border StrokeThickness="0" Margin="0,2" Padding="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10"/>
+                        </Border.StrokeShape>
+                        <Grid ColumnDefinitions="5,62,*,Auto" ColumnSpacing="10" Padding="0">
+                            <Grid.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="#161c2c" Offset="0.0"/>
+                                    <GradientStop Color="#0d121f" Offset="1.0"/>
+                                </LinearGradientBrush>
+                            </Grid.Background>
+
+                            <BoxView Grid.Column="0" WidthRequest="5"
+                                     Color="{Binding IsWin, Converter={StaticResource WinColor}}"
+                                     VerticalOptions="Fill"/>
+
+                            <Border Grid.Column="1"
+                                    Stroke="#c084fc" StrokeThickness="1.5"
+                                    WidthRequest="62" HeightRequest="38"
+                                    Margin="10,8,0,8"
+                                    VerticalOptions="Center">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="8"/>
+                                </Border.StrokeShape>
+                                <Image Source="{Binding FriendHeroIcon}" Aspect="AspectFill"/>
+                            </Border>
+
+                            <VerticalStackLayout Grid.Column="2" Spacing="2"
+                                                 VerticalOptions="Center"
+                                                 Padding="0,8">
+                                <Label Text="{Binding Result}"
+                                       FontSize="11" FontAttributes="Bold"
+                                       TextColor="{Binding IsWin, Converter={StaticResource WinColor}}"
+                                       CharacterSpacing="1"/>
+                                <Label Text="{Binding FriendKda, StringFormat='KDA: {0}'}"
+                                       FontSize="14"
+                                       TextColor="White"/>
+                            </VerticalStackLayout>
+
+                            <VerticalStackLayout Grid.Column="3" Spacing="3"
+                                                 VerticalOptions="Center"
+                                                 Padding="0,8,12,8">
+                                <Label Text="{Binding DateLabel}"
+                                       FontSize="11" TextColor="#c9d1d9"
+                                       HorizontalTextAlignment="End"/>
+                                <Label Text="{Binding DurationLabel}"
+                                       FontSize="10" TextColor="#8899aa"
+                                       HorizontalTextAlignment="End"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Label x:Name="EmptyLabel" Grid.Row="2"
+               Text="Матчей не найдено"
+               FontSize="13" TextColor="#4a5568"
+               HorizontalTextAlignment="Center"
+               VerticalOptions="Center"
+               IsVisible="False"/>
+
+    </Grid>
+</ContentPage>

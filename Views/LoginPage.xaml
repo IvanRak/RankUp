@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RankUp.Views.LoginPage"
+             BackgroundColor="#0a0e1a"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="*,Auto,*" Padding="32">
+
+        <VerticalStackLayout Grid.Row="1" Spacing="24">
+
+            <Label Text="RANK UP"
+                   FontSize="56"
+                   FontAttributes="Bold"
+                   TextColor="#f5df67"
+                   HorizontalOptions="Center"/>
+
+            <Label Text="Steam ID или ник"
+                   FontSize="14"
+                   TextColor="#8899aa"
+                   HorizontalOptions="Center"
+                   CharacterSpacing="2"/>
+
+            <Border StrokeThickness="1.5" Stroke="#f5df67" Padding="16,0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="14"/>
+                </Border.StrokeShape>
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#1a2030" Offset="0.0"/>
+                        <GradientStop Color="#0f1420" Offset="1.0"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Entry x:Name="SteamIdEntry"
+                       Placeholder=""
+                       PlaceholderColor="#4a5568"
+                       TextColor="White"
+                       BackgroundColor="Transparent"
+                       FontSize="18"
+                       HeightRequest="56"/>
+            </Border>
+
+            <Button Text="ВОЙТИ"
+                    BackgroundColor="#f5df67"
+                    TextColor="#0a0e1a"
+                    FontAttributes="Bold"
+                    FontSize="18"
+                    CornerRadius="14"
+                    HeightRequest="56"
+                    Clicked="OnLoginClicked"/>
+
+            <ActivityIndicator x:Name="Loader" IsRunning="False" Color="#f5df67"/>
+
+            <Label x:Name="ErrorLabel"
+                   TextColor="#f87171"
+                   FontSize="13"
+                   HorizontalTextAlignment="Center"
+                   LineBreakMode="WordWrap"/>
+
+            <Label Text="Примеры: dendi, miracle, 76561197960669587"
+                   TextColor="#4a5568"
+                   FontSize="11"
+                   HorizontalTextAlignment="Center"/>
+
+        </VerticalStackLayout>
+
+    </Grid>
+</ContentPage>

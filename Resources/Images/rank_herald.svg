@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <path d="M64 8 L112 24 L112 68 Q112 108 64 120 Q16 108 16 68 L16 24 Z"
+        fill="#8B5A2B" stroke="#1a1a1a" stroke-width="4"/>
+  <text x="64" y="80" text-anchor="middle" font-family="Arial" font-weight="900" font-size="48" fill="#fff">H</text>
+</svg>

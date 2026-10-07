@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:RankUp.Models"
+             x:Class="RankUp.Views.ProfilePickerPage"
+             BackgroundColor="#0a0e1a"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="16" RowSpacing="12">
+
+        <VerticalStackLayout Grid.Row="0" Spacing="6" Margin="0,20,0,10">
+            <Label Text="Найдено несколько"
+                   FontSize="22"
+                   FontAttributes="Bold"
+                   TextColor="#f5df67"
+                   HorizontalTextAlignment="Center"/>
+            <Label Text="Выбери нужный"
+                   FontSize="13"
+                   TextColor="#8899aa"
+                   HorizontalTextAlignment="Center"/>
+        </VerticalStackLayout>
+
+        <CollectionView x:Name="ProfilesList"
+                        Grid.Row="1"
+                        SelectionMode="Single"
+                        SelectionChanged="OnProfileSelected">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:ProfileSearchResult">
+                    <Border StrokeThickness="0" Margin="0,4" Padding="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="14"/>
+                        </Border.StrokeShape>
+                        <Grid ColumnDefinitions="60,*" ColumnSpacing="12" Padding="12,10">
+                            <Grid.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="#161c2c" Offset="0.0"/>
+                                    <GradientStop Color="#0f1420" Offset="1.0"/>
+                                </LinearGradientBrush>
+                            </Grid.Background>
+
+                            <Border Grid.Column="0"
+                                    Stroke="#f5df67" StrokeThickness="2"
+                                    WidthRequest="60" HeightRequest="60">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="30"/>
+                                </Border.StrokeShape>
+                                <Image Source="{Binding Avatar}"
+                                       Aspect="AspectFill"
+                                       WidthRequest="60" HeightRequest="60"/>
+                            </Border>
+
+                            <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                                <Label Text="{Binding Name}"
+                                       FontSize="16"
+                                       FontAttributes="Bold"
+                                       TextColor="#f5df67"/>
+                                <Label Text="{Binding SteamId, StringFormat='ID: {0}'}"
+                                       FontSize="11"
+                                       TextColor="#8899aa"/>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Button Grid.Row="2"
+                Text="ОТМЕНА"
+                BackgroundColor="Transparent"
+                TextColor="#8899aa"
+                BorderColor="#2a3748"
+                BorderWidth="1"
+                FontAttributes="Bold"
+                CornerRadius="14"
+                HeightRequest="52"
+                Clicked="OnCancelClicked"/>
+
+    </Grid>
+</ContentPage>

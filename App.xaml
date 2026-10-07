@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:conv="clr-namespace:RankUp.Converters"
+             x:Class="RankUp.App">
+    <Application.Resources>
+        <ResourceDictionary>
+            <conv:WinColorConverter x:Key="WinColor" />
+            <conv:RankToMedalConverter x:Key="RankToMedal" />
+            <conv:FavIconConverter x:Key="FavIcon" />
+            <conv:IntToBoolConverter x:Key="IntToBool" />
+
+            <Color x:Key="PageBackground">#0a0e1a</Color>
+            <Color x:Key="CardBackground">#161c2c</Color>
+            <Color x:Key="CardBackgroundDeep">#0f1420</Color>
+            <Color x:Key="AccentGold">#f5df67</Color>
+            <Color x:Key="AccentGreen">#4ade80</Color>
+            <Color x:Key="AccentRed">#f87171</Color>
+            <Color x:Key="AccentPurple">#c084fc</Color>
+            <Color x:Key="TextMuted">#8899aa</Color>
+
+            <Style x:Key="MatchCard" TargetType="Border">
+                <Setter Property="StrokeThickness" Value="0"/>
+                <Setter Property="Margin" Value="0,3"/>
+                <Setter Property="Padding" Value="0"/>
+                <Setter Property="StrokeShape">
+                    <Setter.Value>
+                        <RoundRectangle CornerRadius="12"/>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Shadow">
+                    <Setter.Value>
+                        <Shadow Brush="#000000" Offset="0,2" Radius="8" Opacity="0.35"/>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="AccentButton" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="#f5df67"/>
+                <Setter Property="TextColor" Value="#0a0e1a"/>
+                <Setter Property="FontAttributes" Value="Bold"/>
+                <Setter Property="CornerRadius" Value="14"/>
+                <Setter Property="HeightRequest" Value="56"/>
+                <Setter Property="Shadow">
+                    <Setter.Value>
+                        <Shadow Brush="#f5df67" Offset="0,0" Radius="20" Opacity="0.4"/>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

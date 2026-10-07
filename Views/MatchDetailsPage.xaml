@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:RankUp.Models"
+             x:Class="RankUp.Views.MatchDetailsPage"
+             BackgroundColor="#0a0e1a"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto" Padding="14" RowSpacing="10">
+
+        <!-- ШАПКА -->
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,20,0,0">
+            <VerticalStackLayout Grid.Column="0" Spacing="4">
+                <Label x:Name="ResultLabel"
+                       FontSize="26" FontAttributes="Bold"
+                       TextColor="#4ade80"/>
+                <Label x:Name="MetaLabel"
+                       FontSize="12" TextColor="#8899aa"/>
+                <Label x:Name="DebugLabel"
+                       FontSize="10" TextColor="#c084fc"/>
+            </VerticalStackLayout>
+            <Button Grid.Column="1" Text="✕"
+                    FontSize="18"
+                    BackgroundColor="#1a2030"
+                    TextColor="#f87171"
+                    WidthRequest="44" HeightRequest="44"
+                    CornerRadius="22" Padding="0"
+                    Clicked="OnCloseClicked"/>
+        </Grid>
+
+        <!-- RADIANT / DIRE -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,*" ColumnSpacing="8" Margin="0,4">
+            <Border StrokeThickness="0" Padding="10,6">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="10"/>
+                </Border.StrokeShape>
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="#1a4a2a" Offset="0.0"/>
+                        <GradientStop Color="#0f2818" Offset="1.0"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Label x:Name="RadiantLabel" Text="RADIANT"
+                       FontSize="13" FontAttributes="Bold"
+                       TextColor="#4ade80"
+                       HorizontalTextAlignment="Center"/>
+            </Border>
+
+            <Border Grid.Column="1" StrokeThickness="0" Padding="10,6">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="10"/>
+                </Border.StrokeShape>
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="#4a1a1a" Offset="0.0"/>
+                        <GradientStop Color="#281010" Offset="1.0"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Label x:Name="DireLabel" Text="DIRE"
+                       FontSize="13" FontAttributes="Bold"
+                       TextColor="#f87171"
+                       HorizontalTextAlignment="Center"/>
+            </Border>
+        </Grid>
+
+        <ScrollView Grid.Row="2">
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                <VerticalStackLayout x:Name="RadiantList" Grid.Column="0" Spacing="6"/>
+                <VerticalStackLayout x:Name="DireList" Grid.Column="1" Spacing="6"/>
+            </Grid>
+        </ScrollView>
+
+        <ActivityIndicator x:Name="Loader" Grid.Row="3"
+                           IsRunning="False" Color="#f5df67"/>
+
+    </Grid>
+</ContentPage>
