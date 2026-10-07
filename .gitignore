@@ -1,0 +1,37 @@
+# Build results
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+*.user
+*.suo
+
+# MAUI
+*.binlog
+*.apk
+*.aab
+*.ipa
+
+# IDE
+.vs/
+.vscode/
+.idea/
+*.swp
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# NuGet
+*.nupkg
+packages/
+project.lock.json
+project.assets.json
+
+# Android
+*.keystore
+*.jks
+
+# Local DB
+*.db3
