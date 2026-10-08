@@ -42,7 +42,6 @@ public class MatchPlayer
     public int LastHits { get; set; }
     public int HeroDamage { get; set; }
 
-    // === Итемы ===
     public List<int> ItemIds { get; set; } = new();
 
     public bool IsRadiant => PlayerSlot < 128;
@@ -50,21 +49,7 @@ public class MatchPlayer
 
     public string Kda => $"{Kills} / {Deaths} / {Assists}";
     public string NetWorthLabel => $"{NetWorth / 1000.0:F1}k";
-    public string HeroIcon => $"https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/{HeroName}.png";
-    public string HeroName => new DotaMatch { HeroId = HeroId }.HeroName;
 
-    // === URL иконок предметов ===
-    public List<string> ItemIcons
-    {
-        get
-        {
-            var result = new List<string>();
-            foreach (var id in ItemIds.Take(6))
-            {
-                var url = ItemDatabase.GetIconUrl(id);
-                if (!string.IsNullOrEmpty(url)) result.Add(url);
-            }
-            return result;
-        }
-    }
+    public string HeroIcon => HeroDatabase.GetIconUrl(HeroId);
+    public string HeroName => HeroDatabase.GetSlug(HeroId);
 }

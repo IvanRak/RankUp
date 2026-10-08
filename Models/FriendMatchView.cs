@@ -15,8 +15,6 @@ public class FriendMatchView
 
     public string FriendKda => $"{FriendKills} / {FriendDeaths} / {FriendAssists}";
 
-    public string FriendHeroIcon =>
-        $"https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/{Slug}.png";
-
-    private string Slug => new DotaMatch { HeroId = FriendHeroId }.HeroName;
+    // 👇 ИСПРАВЛЕНО: через HeroDatabase — учитывает локальный кэш
+    public string FriendHeroIcon => HeroDatabase.GetIconUrl(FriendHeroId);
 }

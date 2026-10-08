@@ -158,7 +158,7 @@ public partial class ProfilePage : ContentPage
             var cachedTs = Preferences.Default.Get("alltime_ts", 0L);
 
             long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            bool hasCache = cachedWins > 0 || cachedLosses > 0;
+            bool hasCache = cachedWins >= 0 && cachedLosses >= 0;
             bool fresh = (now - cachedTs) < 6 * 3600;
 
             if (hasCache)
@@ -586,6 +586,10 @@ public partial class ProfilePage : ContentPage
 
         foreach (var h in heroes)
         {
+            // 👇 Пропускаем неизвестных героев (новых из патчей)
+            var slug = HeroDatabase.GetSlug(h);
+            if (string.IsNullOrEmpty(slug)) continue;
+
             _allHeroItems.Add(new HeroPickerItem
             {
                 HeroId = h,

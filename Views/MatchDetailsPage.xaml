@@ -16,8 +16,10 @@
                        TextColor="#4ade80"/>
                 <Label x:Name="MetaLabel"
                        FontSize="12" TextColor="#8899aa"/>
+                <!-- 👇 Скрыли отладочную надпись -->
                 <Label x:Name="DebugLabel"
-                       FontSize="10" TextColor="#c084fc"/>
+                       FontSize="10" TextColor="#c084fc"
+                       IsVisible="False"/>
             </VerticalStackLayout>
             <Button Grid.Column="1" Text="✕"
                     FontSize="18"

@@ -4,7 +4,7 @@
              xmlns:models="clr-namespace:RankUp.Models"
              x:Class="RankUp.Views.ProfilePage"
              BackgroundColor="#0a0e1a"
-             Title="Профиль">
+             Title="Профиль игрока">
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Выйти" Clicked="OnLogoutClicked"/>
@@ -214,6 +214,7 @@
                        CharacterSpacing="1.5"/>
             </Border>
 
+            <!-- 👇 ИСПРАВЛЕНО: #9f0000 → #c084fc -->
             <Border x:Name="TabFriendsChip" Grid.Column="1"
                     Padding="12,8" StrokeThickness="1.5"
                     Stroke="#c084fc" BackgroundColor="Transparent">
@@ -229,7 +230,6 @@
                        CharacterSpacing="1.5"/>
             </Border>
 
-            <!-- КАСТОМНАЯ КНОПКА ВЫБОРА ГЕРОЯ -->
             <Border x:Name="HeroPickerButton" Grid.Column="2"
                     StrokeThickness="1.5" Stroke="#f5df67"
                     Padding="10,8" WidthRequest="140">
@@ -367,7 +367,7 @@
                                FontAttributes="Bold"
                                TextColor="#4a5568"
                                HorizontalTextAlignment="Center"/>
-                        <Label Text="Друзья появятся после загрузки матчей"
+                        <Label Text="Тиммейты появятся после загрузки матчей"
                                FontSize="12"
                                TextColor="#3a4558"
                                HorizontalTextAlignment="Center"/>
@@ -386,9 +386,7 @@
                            VerticalOptions="End"
                            Margin="0,0,14,20"/>
 
-        <!-- ═══════════════════════════════════════════ -->
         <!-- ОВЕРЛЕЙ ВЫБОРА ГЕРОЯ -->
-        <!-- ═══════════════════════════════════════════ -->
         <Grid x:Name="HeroOverlay"
               Grid.RowSpan="6"
               IsVisible="False"
@@ -412,7 +410,6 @@
                 </Border.Background>
 
                 <Grid RowDefinitions="Auto,Auto,*">
-                    <!-- Заголовок -->
                     <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Padding="16,14">
                         <Label Grid.Column="0"
                                Text="Выбор героя"
@@ -430,7 +427,6 @@
                         </Label>
                     </Grid>
 
-                    <!-- Поиск -->
                     <Border Grid.Row="1"
                             Stroke="#2a3748" StrokeThickness="1"
                             Margin="16,0,16,10"
@@ -448,7 +444,6 @@
                                TextChanged="OnHeroSearchChanged"/>
                     </Border>
 
-                    <!-- Список героев -->
                     <CollectionView x:Name="HeroList"
                                     Grid.Row="2"
                                     SelectionMode="Single"
@@ -456,7 +451,7 @@
                         <CollectionView.ItemTemplate>
                             <DataTemplate x:DataType="models:HeroPickerItem">
                                 <Grid Padding="16,8"
-                                      ColumnDefinitions="48,*,Auto"
+                                      ColumnDefinitions="48,*"
                                       ColumnSpacing="12">
 
                                     <Border Grid.Column="0"
@@ -476,12 +471,6 @@
                                            TextColor="White"
                                            VerticalOptions="Center"
                                            LineBreakMode="TailTruncation"/>
-
-                                    <Label Grid.Column="2"
-                                           Text="✓"
-                                           FontSize="14"
-                                           TextColor="#4ade80"
-                                           VerticalOptions="Center"/>
                                 </Grid>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>

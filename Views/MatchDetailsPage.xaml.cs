@@ -82,7 +82,7 @@ public partial class MatchDetailsPage : ContentPage
         {
             DebugLabel.Text = "Загрузка справочника...";
 
-            // Ждём не более 5 сек, потом идём дальше
+            // Ждём не более 5 сек
             var itemsTask = ItemDatabase.EnsureLoadedAsync();
             await Task.WhenAny(itemsTask, Task.Delay(5000));
 
@@ -239,14 +239,11 @@ public partial class MatchDetailsPage : ContentPage
                 HeightRequest = 30
             };
             heroBorder.StrokeShape = new RoundRectangle { CornerRadius = 5 };
+
+            // 👇 ИСПРАВЛЕНО: ImageSource напрямую (без UriImageSource) — работает и с локальными файлами
             heroBorder.Content = new Image
             {
-                Source = new UriImageSource
-                {
-                    Uri = new Uri(p.HeroIcon),
-                    CachingEnabled = true,
-                    CacheValidity = TimeSpan.FromDays(30)
-                },
+                Source = p.HeroIcon,
                 Aspect = Aspect.AspectFill
             };
             Grid.SetColumn(heroBorder, 0);
@@ -303,14 +300,10 @@ public partial class MatchDetailsPage : ContentPage
                     var url = ItemDatabase.GetIconUrl(itemId);
                     if (!string.IsNullOrEmpty(url))
                     {
+                        // 👇 ИСПРАВЛЕНО: ImageSource напрямую
                         itemBorder.Content = new Image
                         {
-                            Source = new UriImageSource
-                            {
-                                Uri = new Uri(url),
-                                CachingEnabled = true,
-                                CacheValidity = TimeSpan.FromDays(30)
-                            },
+                            Source = url,
                             Aspect = Aspect.AspectFit
                         };
                     }

@@ -40,7 +40,7 @@
                        HeightRequest="56"/>
             </Border>
 
-            <Button Text="ВОЙТИ"
+            <Button Text="НАЙТИ"
                     BackgroundColor="#f5df67"
                     TextColor="#0a0e1a"
                     FontAttributes="Bold"
@@ -57,7 +57,7 @@
                    HorizontalTextAlignment="Center"
                    LineBreakMode="WordWrap"/>
 
-            <Label Text="Примеры: dendi, miracle, 76561197960669587"
+            <Label Text=""
                    TextColor="#4a5568"
                    FontSize="11"
                    HorizontalTextAlignment="Center"/>

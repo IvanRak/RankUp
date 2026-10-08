@@ -12,7 +12,6 @@ public partial class LoginPage : ContentPage
         InitializeComponent();
     }
 
-    // === RANKUP-FEATURE: login-search ===
     private async void OnLoginClicked(object sender, EventArgs e)
     {
         var input = SteamIdEntry.Text?.Trim() ?? "";
@@ -30,15 +29,20 @@ public partial class LoginPage : ContentPage
         {
             long accountId;
 
-            // 17 цифр → SteamID64
             if (input.Length == 17 && long.TryParse(input, out var id64))
             {
                 accountId = id64 - 76561197960265728L;
             }
             else
             {
-                // Иначе — поиск по нику
-                var found = await SearchByNicknameAsync(input);
+                var (found, apiOk) = await SearchByNicknameAsync(input);
+
+                // 👇 ИСПРАВЛЕНО: различаем ошибки API и «ник не найден»
+                if (!apiOk)
+                {
+                    ErrorLabel.Text = "OpenDota недоступна. Проверь интернет и попробуй позже";
+                    return;
+                }
 
                 if (found.Count == 0)
                 {
@@ -52,7 +56,6 @@ public partial class LoginPage : ContentPage
                 }
                 else
                 {
-                    // Показываем красивый список
                     var picker = new ProfilePickerPage(found);
                     await Navigation.PushModalAsync(picker);
                     var chosen = await picker.Result;
@@ -88,7 +91,8 @@ public partial class LoginPage : ContentPage
         }
     }
 
-    private async Task<List<ProfileSearchResult>> SearchByNicknameAsync(string query)
+    // 👇 ИСПРАВЛЕНО: возвращаем tuple (results, success)
+    private async Task<(List<ProfileSearchResult> Results, bool Success)> SearchByNicknameAsync(string query)
     {
         var results = new List<ProfileSearchResult>();
 
@@ -123,10 +127,14 @@ public partial class LoginPage : ContentPage
 
                 if (results.Count >= 20) break;
             }
-        }
-        catch { }
 
-        return results;
+            return (results, true);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[Search] {ex.Message}");
+            return (results, false);
+        }
     }
 
     private async Task<(string Name, string Avatar)?> LoadProfileAsync(long accountId)
@@ -148,5 +156,4 @@ public partial class LoginPage : ContentPage
             return null;
         }
     }
-    // === END RANKUP-FEATURE: login-search ===
 }

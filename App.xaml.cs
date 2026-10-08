@@ -11,15 +11,11 @@ public partial class App : Application
     {
         var window = new Window(new AppShell());
 
-        // ═══════════════════════════════════════════
-        // ФОНОВАЯ ПРЕДЗАГРУЗКА ИКОНОК ГЕРОЕВ И ПРЕДМЕТОВ
-        // ═══════════════════════════════════════════
         _ = Task.Run(async () =>
         {
             try
             {
                 System.Diagnostics.Debug.WriteLine("[Prefetch] Старт");
-
                 await RankUp.Models.ItemDatabase.PrefetchAllAsync();
                 await RankUp.Models.HeroDatabase.PrefetchAllAsync();
 
@@ -31,9 +27,6 @@ public partial class App : Application
             }
         });
 
-        // ═══════════════════════════════════════════
-        // ПЕРЕХОД НА НУЖНУЮ СТРАНИЦУ
-        // ═══════════════════════════════════════════
         var steamId = Preferences.Default.Get("steam_id", "");
         var target = string.IsNullOrEmpty(steamId) ? "//login" : "//profile";
 

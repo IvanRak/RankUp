@@ -4,51 +4,98 @@ namespace RankUp.Models;
 
 public static class ItemDatabase
 {
-    private const string PrefetchFlagKey = "items_prefetched_v1";
     private static readonly HttpClient _http = new() { Timeout = TimeSpan.FromSeconds(30) };
-
     private static readonly Dictionary<int, string> Names = new();
     private static bool _loaded = false;
     private static readonly SemaphoreSlim _lock = new(1, 1);
+
+    private static string LocalFile => Path.Combine(FileSystem.AppDataDirectory, "items.json");
+    private static string PrefetchFlagKey => "items_prefetched_v4";
 
     public static int Count => Names.Count;
 
     public static async Task EnsureLoadedAsync()
     {
-        if (_loaded) return;
+        if (_loaded && Names.Count > 0) return;
 
         await _lock.WaitAsync();
         try
         {
-            if (_loaded) return;
+            if (_loaded && Names.Count > 0) return;
 
+            // 1. Из локальной копии в AppData (быстрее, чем читать из APK)
+            if (File.Exists(LocalFile))
+            {
+                try
+                {
+                    var json = await File.ReadAllTextAsync(LocalFile);
+                    ParseJson(json);
+                    if (Names.Count > 0)
+                    {
+                        _loaded = true;
+                        System.Diagnostics.Debug.WriteLine($"[ItemDatabase] Из файла AppData: {Names.Count}");
+                        return;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[ItemDatabase] AppData ошибка: {ex.Message}");
+                }
+            }
+
+            // 2. Из встроенного ресурса Resources/Raw/items_baked.json
             try
             {
-                var json = await _http.GetStringAsync("https://api.opendota.com/api/constants/items");
-                var root = JsonDocument.Parse(json).RootElement;
+                using var stream = await FileSystem.OpenAppPackageFileAsync("items_baked.json");
+                using var reader = new StreamReader(stream);
+                var json = await reader.ReadToEndAsync();
 
-                foreach (var prop in root.EnumerateObject())
+                ParseJson(json);
+
+                if (Names.Count > 0)
                 {
-                    if (!prop.Value.TryGetProperty("id", out var idProp)) continue;
-                    if (idProp.ValueKind != JsonValueKind.Number) continue;
-
-                    var id = idProp.GetInt32();
-                    if (id <= 0) continue;
-
-                    Names[id] = prop.Name;
+                    await File.WriteAllTextAsync(LocalFile, json);
+                    _loaded = true;
+                    System.Diagnostics.Debug.WriteLine($"[ItemDatabase] Из ресурса: {Names.Count}");
                 }
-
-                System.Diagnostics.Debug.WriteLine($"[ItemDatabase] Загружено {Names.Count} имён");
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("[ItemDatabase] Ресурс есть, но распарсилось 0");
+                }
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"[ItemDatabase] Ошибка: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"[ItemDatabase] Ресурс не найден: {ex.Message}");
             }
         }
         finally
         {
-            _loaded = true;
             _lock.Release();
+        }
+    }
+
+    private static void ParseJson(string json)
+    {
+        try
+        {
+            var root = JsonDocument.Parse(json).RootElement;
+            if (root.ValueKind != JsonValueKind.Object) return;
+            if (root.TryGetProperty("error", out _)) return;
+
+            foreach (var prop in root.EnumerateObject())
+            {
+                if (!prop.Value.TryGetProperty("id", out var idProp)) continue;
+                if (idProp.ValueKind != JsonValueKind.Number) continue;
+
+                var id = idProp.GetInt32();
+                if (id <= 0) continue;
+
+                Names[id] = prop.Name;
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[ItemDatabase] Parse error: {ex.Message}");
         }
     }
 
@@ -62,19 +109,20 @@ public static class ItemDatabase
         return ImageCache.Source(local, remote);
     }
 
-    // ═══════════════════════════════════════════
-    // ПРЕДЗАГРУЗКА ВСЕХ ИКОНОК ПРЕДМЕТОВ
-    // ═══════════════════════════════════════════
+    // ─── ПРЕДЗАГРУЗКА ИКОНОК (только CDN) ───
     public static async Task PrefetchAllAsync()
     {
         if (Preferences.Default.Get(PrefetchFlagKey, false)) return;
 
+        await EnsureLoadedAsync();
+        if (Names.Count == 0)
+        {
+            System.Diagnostics.Debug.WriteLine("[ItemPrefetch] Справочник пуст");
+            return;
+        }
+
         try
         {
-            // Сначала грузим имена, чтобы знать что качать
-            await EnsureLoadedAsync();
-            if (Names.Count == 0) return;
-
             ImageCache.EnsureDirs();
 
             var names = Names.Values.Distinct().ToList();
@@ -103,12 +151,22 @@ public static class ItemDatabase
 
             System.Diagnostics.Debug.WriteLine($"[ItemPrefetch] Скачано: {done}/{names.Count}");
 
-            if (done > 0)
+            if (done >= names.Count * 0.8)
                 Preferences.Default.Set(PrefetchFlagKey, true);
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"[ItemPrefetch] Ошибка: {ex.Message}");
         }
+    }
+
+    public static void ClearCache()
+    {
+        try
+        {
+            if (File.Exists(LocalFile)) File.Delete(LocalFile);
+            Preferences.Default.Remove(PrefetchFlagKey);
+        }
+        catch { }
     }
 }
